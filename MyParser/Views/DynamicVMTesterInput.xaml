@@ -1,0 +1,13 @@
+﻿<Window x:Class="Oss.Windows.Views.DynamicVMTesterInput"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Oss.Windows.Views"
+        mc:Ignorable="d"
+        Title="DynamicVMTesterInput" Height="300" Width="300">
+    <StackPanel Orientation="Vertical">
+        <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+        <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+    </StackPanel>
+</Window>
