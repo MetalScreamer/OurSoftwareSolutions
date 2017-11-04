@@ -11,7 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace MyParser.ViewModels
+namespace Oss.Windows.ViewModels
 {
     class MainWindowViewModel : ViewModelBase
     {

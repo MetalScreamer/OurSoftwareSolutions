@@ -192,8 +192,13 @@
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="ViewModels\AsynchronousCommand.cs" />
+    <Compile Include="ViewModels\ClassDefinitionEditorViewModel.cs" />
     <Compile Include="ViewModels\DynamicViewModel.cs" />
     <Compile Include="ViewModels\NotifyTaskCompletion.cs" />
+    <Page Include="Views\DynamicClassDefinitionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DynamicVMTesterInput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +219,9 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AttachedProperties.cs" />
+    <Compile Include="Views\DynamicClassDefinitionView.xaml.cs">
+      <DependentUpon>DynamicClassDefinitionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DynamicVMTesterInput.xaml.cs">
       <DependentUpon>DynamicVMTesterInput.xaml</DependentUpon>
     </Compile>

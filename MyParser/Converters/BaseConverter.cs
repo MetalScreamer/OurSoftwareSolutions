@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace MyParser.Converters
+namespace Oss.Windows.Converters
 {
     abstract class BaseConverter : MarkupExtension
     {

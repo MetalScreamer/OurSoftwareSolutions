@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MyParser.Views
+namespace Oss.Windows.Views
 {
     class ListboxAttachedProperties
     {

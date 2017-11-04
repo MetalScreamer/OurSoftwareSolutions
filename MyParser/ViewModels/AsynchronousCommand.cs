@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MyParser.ViewModels
+namespace Oss.Windows.ViewModels
 {
     class AsynchronousCommand : ICommand
     {

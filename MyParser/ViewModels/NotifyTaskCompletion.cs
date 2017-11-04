@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyParser.ViewModels
+namespace Oss.Windows.ViewModels
 {
     sealed class NotifyTaskCompletion<TResult> : INotifyPropertyChanged
     {
