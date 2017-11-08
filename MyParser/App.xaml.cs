@@ -5,6 +5,9 @@ using Oss.Common.Interfaces;
 using Oss.BuisinessLayer;
 using Oss.Windows.Views;
 using Oss.Windows.ViewModels;
+using Oss.Common.Services;
+using Oss.BuisinessLayer.Services;
+using Oss.Dal.Repositories;
 
 namespace Oss.Windows
 {
@@ -33,7 +36,7 @@ namespace Oss.Windows
             //viewWindow.Show();
             var window = new Window()
             {
-                Content = new DynamicClassDefinitionView()
+                Content = new DynamicClassDefinitionView() { DataContext = container.Resolve<ClassLibraryViewModel>() }
             };
             window.Show();
         }
@@ -41,6 +44,9 @@ namespace Oss.Windows
         private static void SetupIocContainer(IUnityContainer container)
         {
             container
+                .RegisterType<IDynamicClassRepository, DynamicClassRepository>()
+                .RegisterType<IDynamicClassService, DynamicClassService>()
+                .RegisterType<ClassLibraryViewModel>()
                 .RegisterType<IExpressionService, JscExpresion>()
                 .RegisterType<MainWindowViewModel>()
                 .RegisterType<MainWindow>(new InjectionConstructor(container.Resolve<MainWindowViewModel>()));                

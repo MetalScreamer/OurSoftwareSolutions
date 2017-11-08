@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Oss.BuisinessLayer.SyntaxHelpers
 {
-    public abstract class DataTypeSyntax
+    public abstract class DataTypeSyntax 
     {
         private class IntegerSyntax : DataTypeSyntax
         {

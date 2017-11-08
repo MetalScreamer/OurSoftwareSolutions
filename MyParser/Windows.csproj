@@ -192,10 +192,11 @@
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="ViewModels\AsynchronousCommand.cs" />
-    <Compile Include="ViewModels\ClassDefinitionEditorViewModel.cs" />
+    <Compile Include="ViewModels\ClassDefinitionViewModel.cs" />
+    <Compile Include="ViewModels\ClassLibraryViewModel.cs" />
     <Compile Include="ViewModels\DynamicViewModel.cs" />
     <Compile Include="ViewModels\NotifyTaskCompletion.cs" />
-    <Page Include="Views\DynamicClassDefinitionView.xaml">
+    <Page Include="Views\ClassLibraryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,10 +218,12 @@
     </Compile>
     <Compile Include="ViewModels\Command.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\PropertyDefinitionViewModel.cs" />
+    <Compile Include="ViewModels\TypeViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AttachedProperties.cs" />
-    <Compile Include="Views\DynamicClassDefinitionView.xaml.cs">
-      <DependentUpon>DynamicClassDefinitionView.xaml</DependentUpon>
+    <Compile Include="Views\ClassLibraryEditor.xaml.cs">
+      <DependentUpon>ClassLibraryEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DynamicVMTesterInput.xaml.cs">
       <DependentUpon>DynamicVMTesterInput.xaml</DependentUpon>
@@ -262,6 +265,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dal\Dal.csproj">
+      <Project>{3b0b55e4-3bb5-4cad-984a-2d8dc7c139f2}</Project>
+      <Name>Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataServiceInterfaces\DataServiceInterfaces.csproj">
+      <Project>{67F1E5CA-BAA8-45DD-AA0C-58C8F9B3E80E}</Project>
+      <Name>DataServiceInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyParserBusinessLayer\PortableBusinessLayer.csproj">
       <Project>{EC51BEAE-72B9-4402-A96F-D43250997B84}</Project>
       <Name>PortableBusinessLayer</Name>
