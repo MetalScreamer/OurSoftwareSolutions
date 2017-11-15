@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.BuisinessLayer.ViewModels
+namespace Oss.BuisinessLayer.ViewDtos
 {
-    public class DynamicClassPropertyDefinition : IDynamicClassPropertyDefinition
+    public class DynamicClassPropertyDefinitionDto : IPropertyDefinition
     {
         public Guid Id { get; } = Guid.NewGuid();
         public string Formula { get; set; }

@@ -9,7 +9,7 @@ namespace Oss.Common.Services
 {
     public interface IDynamicClassPropertyService
     {
-        IDynamicClassPropertyDefinition AddProperty(IDynamicClassDefinition cls);
-        void RemoveProperty(IDynamicClassPropertyDefinition property, IDynamicClassDefinition cls);
+        IPropertyDefinition AddProperty(IDynamicClassDefinition cls);
+        void RemoveProperty(IPropertyDefinition property, IDynamicClassDefinition cls);
     }
 }

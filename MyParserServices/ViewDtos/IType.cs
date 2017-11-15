@@ -10,6 +10,6 @@ namespace Oss.Common.ViewDtos
     {
         Guid Id { get; }
         string Name { get; }
-        Type Type { get; }
+        Type DotNetType { get; }
     }
 }

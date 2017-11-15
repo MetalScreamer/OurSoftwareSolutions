@@ -265,6 +265,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
+      <Project>{4154d857-d462-4c3e-a13d-b2b138f8d032}</Project>
+      <Name>BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dal\Dal.csproj">
       <Project>{3b0b55e4-3bb5-4cad-984a-2d8dc7c139f2}</Project>
       <Name>Dal</Name>
@@ -274,7 +278,7 @@
       <Name>DataServiceInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyParserBusinessLayer\PortableBusinessLayer.csproj">
-      <Project>{EC51BEAE-72B9-4402-A96F-D43250997B84}</Project>
+      <Project>{ec51beae-72b9-4402-a96f-d43250997b84}</Project>
       <Name>PortableBusinessLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyParserServices\Common.csproj">

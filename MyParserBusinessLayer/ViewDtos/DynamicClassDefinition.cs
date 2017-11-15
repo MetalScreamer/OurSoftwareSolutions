@@ -6,28 +6,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.BuisinessLayer.ViewModels
+namespace Oss.BuisinessLayer.ViewDtos
 {
     public class DynamicClassDefinition : IDynamicClassDefinition
     {
         private Guid id = Guid.NewGuid();
 
-        private List<IDynamicClassPropertyDefinition> properties = new List<IDynamicClassPropertyDefinition>();
+        private List<IPropertyDefinition> properties = new List<IPropertyDefinition>();
 
         public Guid Id { get; }
-        public string Name { get; set; }
-        public IEnumerable<IDynamicClassPropertyDefinition> Properties { get { return properties.AsEnumerable(); } }
 
-        IDynamicClassPropertyDefinition AddProperty()
+        public bool IsDirty
         {
-            const string defaultPropertyName = "NewProperty";
-            var counter = 0;
-            while (properties.Any(p => string.Equals(defaultPropertyName + ++counter, p.Name)));
-            return new DynamicClassPropertyDefinition()
+            get
             {
-                Name = defaultPropertyName + counter,
-                Type = DynamicClassPropertyType.String
-            };
+                throw new NotImplementedException();
+            }
         }
+
+        public string Name { get; set; }
+        public IEnumerable<IPropertyDefinition> Properties { get { return properties.AsEnumerable(); } }
+
+        
     }
 }

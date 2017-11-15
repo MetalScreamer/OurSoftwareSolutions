@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Oss.Dal.Dtos
 {
-    public interface IDynamicClassDefinition
+    public interface IClassDefinition
     {
+        long Id { get; }
+        string Name { get; set; }
+        IEnumerable<IPropertyDefinition> Properties { get; }
     }
 }

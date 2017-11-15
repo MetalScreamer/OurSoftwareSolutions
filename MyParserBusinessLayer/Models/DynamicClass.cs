@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.BuisinessLayer.ViewDtos
+namespace Oss.BuisinessLayer.Models
 {
     public class DynamicClass
     {
@@ -14,7 +14,7 @@ namespace Oss.BuisinessLayer.ViewDtos
         public IEnumerable<DynamicClassPropertyDefinition> Properties { get { return properties.AsEnumerable(); } }
 
         public object GetDefaultValue(string propertyName)
-            => properties.FirstOrDefault(p => p.Name == propertyName)?.DefaultValue;
+            => this.properties.FirstOrDefault(p => p.Name == propertyName)?.DefaultValue;
 
         public DynamicObject CreateInstance() => new DynamicObject(this);
 

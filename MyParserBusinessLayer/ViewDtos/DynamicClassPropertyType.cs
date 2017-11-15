@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.BuisinessLayer.ViewModels
+namespace Oss.BuisinessLayer.ViewDtos
 {
     class DynamicClassPropertyType : IType
     {
         public Guid Id { get; }
         public string Name { get; }
-        public Type Type { get; }
+        public Type DotNetType { get; }
 
         public static DynamicClassPropertyType Integer { get; } = new DynamicClassPropertyType("[bdb9ca0a-5e70-4277-ac0c-bcc02768f264]", "Integer", typeof(int));
         public static DynamicClassPropertyType String { get; } = new DynamicClassPropertyType("[ebff1268-8f17-4f21-a9ea-df3e40706fba]", "String", typeof(string));
@@ -35,7 +35,7 @@ namespace Oss.BuisinessLayer.ViewModels
         {
             Id = new Guid(id);
             Name = name;
-            Type = type;
+            DotNetType = type;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Oss.Common.ViewDtos
     {
         Guid Id { get; }
         string Name { get; set; }
-        IEnumerable<IDynamicClassPropertyDefinition> Properties { get; }
+        IEnumerable<IPropertyDefinition> Properties { get; }
+        bool IsDirty { get; }
     }
 }

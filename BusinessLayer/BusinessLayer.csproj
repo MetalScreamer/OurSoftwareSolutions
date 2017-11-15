@@ -142,12 +142,6 @@
     <Compile Include="Scripting\Script.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyParserBusinessLayer\PortableBusinessLayer.csproj">
-      <Project>{ec51beae-72b9-4402-a96f-d43250997b84}</Project>
-      <Name>PortableBusinessLayer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

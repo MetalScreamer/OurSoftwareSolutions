@@ -9,7 +9,10 @@ namespace Oss.Common.Services
 {
     public interface IDynamicClassService
     {
-        IDynamicClassDefinition AddClass();
-        void RemoveClass(IDynamicClassDefinition cls);
+        IEnumerable<IDynamicClassDefinition> Classes { get; }
+        Task<IDynamicClassDefinition> AddClass();
+        Task RemoveClass(IDynamicClassDefinition cls);
+        Task Refresh(bool ignoreChanges);
+        Task SaveChanges();
     }
 }

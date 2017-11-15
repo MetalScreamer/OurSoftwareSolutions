@@ -2,7 +2,7 @@
 
 namespace Oss.Common.ViewDtos
 {
-    public interface IDynamicClassPropertyDefinition
+    public interface IPropertyDefinition
     {
         Guid Id { get; }
         string Name { get; set; }

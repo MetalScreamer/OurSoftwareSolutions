@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.BuisinessLayer.ViewDtos
+namespace Oss.BuisinessLayer.Models
 {
     public class DynamicClassPropertyDefinition
     {

@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extentions\DynamicClassExtensions.cs" />
     <Compile Include="Models\DynamicClass.cs" />
     <Compile Include="Models\DynamicClassPropertyDefinition.cs" />
     <Compile Include="ExpressionParsingException.cs" />
@@ -48,16 +49,18 @@
     <Compile Include="ViewDtos\DynamicClassPropertyType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\DataServiceInterfaces\DataServiceInterfaces.csproj">
       <Project>{67f1e5ca-baa8-45dd-aa0c-58c8f9b3e80e}</Project>
       <Name>DataServiceInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyParserServices\Common.csproj">
-      <Project>{731c812d-ce7a-46d7-a314-3e187d7d2852}</Project>
+      <Project>{731C812D-CE7A-46D7-A314-3E187D7D2852}</Project>
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
