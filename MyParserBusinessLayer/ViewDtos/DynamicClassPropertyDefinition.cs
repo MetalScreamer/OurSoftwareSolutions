@@ -14,5 +14,7 @@ namespace Oss.BuisinessLayer.ViewDtos
         public bool IsReadonly { get; set; }
         public string Name { get; set; }
         public IType Type { get; set; }
+
+        public bool IsDirty { get; internal set; }
     }
 }

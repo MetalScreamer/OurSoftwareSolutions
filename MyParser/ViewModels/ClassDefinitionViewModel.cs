@@ -11,6 +11,11 @@ namespace Oss.Windows.ViewModels
     {
         private string name;
 
+        public Guid Id { get; }
+
+        public ClassDefinitionViewModel() : this(Guid.Empty) { }
+        public ClassDefinitionViewModel(Guid id) { Id = id; }
+
         public string Name
         {
             get { return name; }

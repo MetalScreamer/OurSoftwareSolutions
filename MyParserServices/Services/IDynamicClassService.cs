@@ -9,9 +9,18 @@ namespace Oss.Common.Services
 {
     public interface IDynamicClassService
     {
-        IEnumerable<IDynamicClassDefinition> Classes { get; }
-        Task<IDynamicClassDefinition> AddClass();
-        Task RemoveClass(IDynamicClassDefinition cls);
+        Task<IEnumerable<IClassDefinition>> GetClasses();
+        Task<IClassDefinition> AddClass();
+        Task UpdateClass(IClassDefinition cls);
+        Task RemoveClass(Guid classId);
+
+        Task<IEnumerable<IPropertyDefinition>> GetProperties(Guid classId);
+        Task<IPropertyDefinition> AddProperty(Guid classId);
+        Task UpdateProperty(IPropertyDefinition property);
+        Task RemoveProperty(Guid classId, Guid propertyId);
+
+        bool IsDirty { get; }
+
         Task Refresh(bool ignoreChanges);
         Task SaveChanges();
     }

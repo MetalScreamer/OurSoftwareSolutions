@@ -9,5 +9,6 @@ namespace Oss.Common.ViewDtos
         IType Type { get; set; }
         string Formula { get; set; }
         bool IsReadonly { get; set; }
+        bool IsDirty { get; }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Oss.Common.ViewDtos
 {
-    public interface IDynamicClassDefinition
+    public interface IClassDefinition
     {
         Guid Id { get; }
         string Name { get; set; }
-        IEnumerable<IPropertyDefinition> Properties { get; }
+        
         bool IsDirty { get; }
     }
 }

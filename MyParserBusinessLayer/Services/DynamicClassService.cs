@@ -13,11 +13,12 @@ namespace Oss.BuisinessLayer.Services
 {
     public class DynamicClassService : IDynamicClassService
     {
-        private readonly List<IDynamicClassDefinition> removedClassList = new List<IDynamicClassDefinition>();
+        private readonly List<IClassDefinition> removedClassList = new List<IClassDefinition>();
         private readonly object classesLock = new object();
         private readonly IDynamicClassRepository repo;
-        private List<IDynamicClassDefinition> classes;
+        private List<IClassDefinition> classes;
 
+        private object dirtyLock = new object();
         private bool isCollectionDirty = false;
 
         public DynamicClassService(IDynamicClassRepository repo)
@@ -25,27 +26,24 @@ namespace Oss.BuisinessLayer.Services
             this.repo = repo;
         }
 
-        public IEnumerable<IDynamicClassDefinition> Classes
-        {
-            get
-            {
-                if (classes == null)
-                {
-                    Refresh(false).Wait();
-                }
-
-                lock (classesLock)
-                {
-                    return classes.AsEnumerable();
-                }
-            }
-        }
+        //Do I need/want this?
+        //public IEnumerable<IClassDefinition> Classes
+        //{
+        //    get
+        //    {
+        //       return GetClasses().Result;                
+        //    }
+        //}
 
         public bool IsDirty
         {
             get
             {
-                if (isCollectionDirty) return true;
+                lock (dirtyLock)
+                {
+                    if (isCollectionDirty) return true;
+                }
+
                 lock (classesLock)
                 {
                     return (classes?.Any(c => c.IsDirty)).GetValueOrDefault();
@@ -53,7 +51,17 @@ namespace Oss.BuisinessLayer.Services
             }
         }
 
-        public async Task<IDynamicClassDefinition> AddClass()
+        public async Task<IEnumerable<IClassDefinition>> GetClasses()
+        {
+            await Refresh(false);
+
+            lock (classesLock)
+            {
+                return classes.AsEnumerable();
+            }
+        }
+
+        public async Task<IClassDefinition> AddClass()
         {
             const string DEFAULT_CLASS_NAME_PREFIX = "NewClass";
 
@@ -62,12 +70,13 @@ namespace Oss.BuisinessLayer.Services
             return await Task.Run(
                 () =>
                 {
+
                     lock (classesLock)
                     {
-                        var classesSnapShot = Classes;
+                        var classesSnapShot = classes;
                         int counter = 0;
                         while (classesSnapShot.Any(c => c.Name.Equals($"{DEFAULT_CLASS_NAME_PREFIX}{++counter}"))) ;
-                        IDynamicClassDefinition newClass =
+                        IClassDefinition newClass =
                             new DynamicClassDefinition() { Name = $"{DEFAULT_CLASS_NAME_PREFIX}{counter}" };
 
                         //add the new class to the collection
@@ -80,7 +89,7 @@ namespace Oss.BuisinessLayer.Services
                 });
         }
 
-        public async Task RemoveClass(IDynamicClassDefinition cls)
+        public async Task RemoveClass(IClassDefinition cls)
         {
             await Task.Run(
                 () =>
@@ -105,9 +114,10 @@ namespace Oss.BuisinessLayer.Services
                         from cls in await repo.GetClasses()
                         select cls.Map();
 
-            lock (classesQuery)
+            lock (classesLock)
+            lock (dirtyLock)
             {
-                classes = new List<IDynamicClassDefinition>(classesQuery);
+                classes = new List<IClassDefinition>(classesQuery);
                 isCollectionDirty = false;
             }
         }
@@ -116,8 +126,48 @@ namespace Oss.BuisinessLayer.Services
         {
             if (IsDirty)
             {
-
+                lock (classesLock)
+                {
+                    foreach(var cls in classes)
+                    {
+                        if (cls.IsDirty)
+                        {
+                            repo.Save();
+                        }
+                    }
+                }
+                
             }
+        }
+
+        public Task UpdateClass(IClassDefinition cls)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveClass(Guid classId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<IPropertyDefinition>> GetProperties(Guid classId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IPropertyDefinition> AddProperty(Guid classId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateProperty(IPropertyDefinition property)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveProperty(Guid classId, Guid propertyId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

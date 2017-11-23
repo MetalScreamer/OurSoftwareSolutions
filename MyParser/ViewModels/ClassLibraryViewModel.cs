@@ -9,12 +9,26 @@ namespace Oss.Windows.ViewModels
     class ClassLibraryViewModel : ViewModelBase
     {
         private ClassDefinitionViewModel selectedClass;
+        private PropertyDefinitionViewModel selectedProperty;
+        private IDynamicClassService classLibraryService;
 
         public ObservableCollection<ClassDefinitionViewModel> Classes { get; } = new ObservableCollection<ClassDefinitionViewModel>();
         public ClassDefinitionViewModel SelectedClass
         {
             get { return selectedClass; }
-            set { SetProperty(value, ref selectedClass); }
+            set
+            {
+                if(SetProperty(value, ref selectedClass))
+                {
+                    SelectedProperty = null;
+                }
+            }
+        }
+
+        public PropertyDefinitionViewModel SelectedProperty
+        {
+            get { return selectedProperty; }
+            set { SetProperty(value, ref selectedProperty); }
         }
 
         public AsynchronousCommand AddClass { get; }
@@ -24,9 +38,21 @@ namespace Oss.Windows.ViewModels
 
         public ClassLibraryViewModel(IDynamicClassService classLibraryService)
         {
+            this.classLibraryService = classLibraryService;
             AddClass = new AsynchronousCommand(DoAddClassAsync);
             RemoveClass = new Command(p => DoRemoveClass(), p => CanRemoveClass());
             AddProperty = new AsynchronousCommand(DoAddProperty, CanAddProperty);
+            RemoveProperty = new Command(p => DoRemoveProperty(), p => CanRemoveProperty());
+        }
+
+        private bool CanRemoveProperty()
+        {
+            return SelectedProperty != null;
+        }
+
+        private void DoRemoveProperty()
+        {
+            classLibraryService.RemoveProperty(SelectedClass.Id, SelectedProperty.Id);
         }
 
         private bool CanAddProperty()
@@ -46,6 +72,7 @@ namespace Oss.Windows.ViewModels
 
         private void DoRemoveClass()
         {
+            //if()
             Classes.Remove(SelectedClass);
         }
 

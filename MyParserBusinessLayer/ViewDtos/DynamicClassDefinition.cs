@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Oss.BuisinessLayer.ViewDtos
 {
-    public class DynamicClassDefinition : IDynamicClassDefinition
+    public class DynamicClassDefinition : IClassDefinition
     {
         private Guid id = Guid.NewGuid();
 

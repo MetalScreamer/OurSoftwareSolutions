@@ -10,12 +10,12 @@ namespace Oss.BuisinessLayer.Extentions
 {
     static class DynamicClassExtensions
     {
-        internal static Common.ViewDtos.IDynamicClassDefinition Map(this Dal.Dtos.IClassDefinition classDefinition)
+        internal static Common.ViewDtos.IClassDefinition Map(this Dal.Dtos.IClassDefinition classDefinition)
         {
             throw new NotImplementedException();
         }
 
-        internal static Dal.Dtos.IClassDefinition Map(this Common.ViewDtos.IDynamicClassDefinition classDefinition)
+        internal static Dal.Dtos.IClassDefinition Map(this Common.ViewDtos.IClassDefinition classDefinition)
         {
             throw new NotImplementedException();
         }
