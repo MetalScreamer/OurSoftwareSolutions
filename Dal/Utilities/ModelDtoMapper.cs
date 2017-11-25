@@ -8,17 +8,16 @@ namespace Oss.Dal.Utilities
 {
     internal static class ModelDtoMapper
     {
-        internal static IClassDefinition MapClassToDto(this ClassDefinition cls, bool includeProperties)
+        internal static IClassDalDto MapClassToDto(this ClassDefinition cls, bool includeProperties)
         {
-            var result = new ClassDefinitionDto()
+            var result = new ClassDalDto(cls.ClassDefinitionId)
             {
-                Id = cls.ClassDefinitionId,
                 Name = cls.Name
             };
 
             if (includeProperties)
             {
-                var properties = new List<IPropertyDefinition>();
+                var properties = new List<IPropertyDalDto>();
                 foreach (var prop in cls.Properties)
                 {
                     properties.Add(MapPropertyToDto(prop));
@@ -30,9 +29,9 @@ namespace Oss.Dal.Utilities
             return result;
         }
 
-        internal static IPropertyDefinition MapPropertyToDto(this PropertyDefinition prop)
+        internal static IPropertyDalDto MapPropertyToDto(this PropertyDefinition prop)
         {
-            return new PropertyDefinitionDto()
+            return new PropertyDalDto()
             {
                 Id = prop.PropertyDefinitionId,
                 Name = prop.Name,
@@ -42,7 +41,7 @@ namespace Oss.Dal.Utilities
             };
         }
 
-        internal static ClassDefinition MapClassToModel(this IClassDefinition classDto)
+        internal static ClassDefinition MapClassToModel(this IClassDalDto classDto)
         {
             return new ClassDefinition(classDto.Id) { Name = classDto.Name };
         }

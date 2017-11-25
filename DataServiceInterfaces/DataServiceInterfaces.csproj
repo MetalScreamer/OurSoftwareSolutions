@@ -37,8 +37,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dtos\IClassDefinition.cs" />
-    <Compile Include="Dtos\IPropertyDefinition.cs" />
+    <Compile Include="Dtos\FactoryDelegates.cs" />
+    <Compile Include="Dtos\IClassDalDto.cs" />
+    <Compile Include="Dtos\IPropertyDalDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IDynamicClassRepository.cs" />
   </ItemGroup>

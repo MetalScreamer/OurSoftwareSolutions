@@ -8,6 +8,10 @@ using Oss.Windows.ViewModels;
 using Oss.Common.Services;
 using Oss.BuisinessLayer.Services;
 using Oss.Dal.Repositories;
+using Oss.Common.ViewDtos;
+using Oss.BuisinessLayer.ViewDtos;
+using Unity.Resolution;
+using Oss.Dal.Dtos;
 
 namespace Oss.Windows
 {
@@ -45,11 +49,15 @@ namespace Oss.Windows
         {
             container
                 .RegisterType<IDynamicClassRepository, DynamicClassRepository>()
-                .RegisterType<IDynamicClassService, DynamicClassService>()
+                .RegisterType<IClassService, DynamicClassService>()
                 .RegisterType<ClassLibraryViewModel>()
                 .RegisterType<IExpressionService, JscExpresion>()
+                .RegisterType<IClassViewDto, ClassViewDto>()
+                .RegisterInstance<ClassViewDtoFactory>(id => container.Resolve<IClassViewDto>(new ParameterOverride("id", id)))
+                .RegisterType<IClassDalDto, ClassDalDto>()
+                .RegisterInstance<ClassDalDtoFactory>(id=>container.Resolve<IClassDalDto>(new ParameterOverride("id", id)))
                 .RegisterType<MainWindowViewModel>()
-                .RegisterType<MainWindow>(new InjectionConstructor(container.Resolve<MainWindowViewModel>()));                
+                .RegisterType<MainWindow>(new InjectionConstructor(container.Resolve<MainWindowViewModel>()));
         }
     }
 }

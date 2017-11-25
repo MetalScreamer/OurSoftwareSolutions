@@ -2,28 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Oss.Common.ViewDtos;
 using Oss.Dal.Repositories;
-using Oss.BuisinessLayer.Extentions;
 using Oss.BuisinessLayer.ViewDtos;
+using Oss.Common.DataStructures;
+using Oss.BuisinessLayer.Mappers;
 
 namespace Oss.BuisinessLayer.Services
 {
-    public class DynamicClassService : IDynamicClassService
+    public class DynamicClassService : IClassService
     {
-        private readonly List<IClassDefinition> removedClassList = new List<IClassDefinition>();
-        private readonly object classesLock = new object();
+        private readonly ThreadSafeList<IClassViewDto> removedClassList = new ThreadSafeList<IClassViewDto>();
         private readonly IDynamicClassRepository repo;
-        private List<IClassDefinition> classes;
+        private readonly IClassDefinitionMapper mapper;
+        private ThreadSafeList<IClassViewDto> classes = new ThreadSafeList<IClassViewDto>();
 
         private object dirtyLock = new object();
         private bool isCollectionDirty = false;
 
-        public DynamicClassService(IDynamicClassRepository repo)
+        public DynamicClassService(IDynamicClassRepository repo, IClassDefinitionMapper mapper)
         {
             this.repo = repo;
+            this.mapper = mapper;
         }
 
         //Do I need/want this?
@@ -44,61 +45,52 @@ namespace Oss.BuisinessLayer.Services
                     if (isCollectionDirty) return true;
                 }
 
-                lock (classesLock)
-                {
-                    return (classes?.Any(c => c.IsDirty)).GetValueOrDefault();
-                }
+
+                return (classes?.Any(c => c.IsDirty)).GetValueOrDefault();
             }
         }
 
-        public async Task<IEnumerable<IClassDefinition>> GetClasses()
+        public async Task<IEnumerable<IClassViewDto>> GetClasses()
         {
             await Refresh(false);
 
-            lock (classesLock)
-            {
-                return classes.AsEnumerable();
-            }
+            return classes.ToList();
         }
 
-        public async Task<IClassDefinition> AddClass()
+        public async Task<IClassViewDto> AddClass()
         {
             const string DEFAULT_CLASS_NAME_PREFIX = "NewClass";
 
-            await Refresh(false);
+            IEnumerable<IClassViewDto> classesSnapShot = classes.ToList();
 
             return await Task.Run(
                 () =>
                 {
+                    int counter = (classesSnapShot?.Any()).GetValueOrDefault() ? 0 : 1;
+                    while (classesSnapShot.Any(c => c.Name.Equals($"{DEFAULT_CLASS_NAME_PREFIX}{++counter}"))) ;
 
-                    lock (classesLock)
-                    {
-                        var classesSnapShot = classes;
-                        int counter = 0;
-                        while (classesSnapShot.Any(c => c.Name.Equals($"{DEFAULT_CLASS_NAME_PREFIX}{++counter}"))) ;
-                        IClassDefinition newClass =
-                            new DynamicClassDefinition() { Name = $"{DEFAULT_CLASS_NAME_PREFIX}{counter}" };
+                    var newClass = new ClassViewDto() { Name = $"{DEFAULT_CLASS_NAME_PREFIX}{counter}" };
 
-                        //add the new class to the collection
-                        classes.Add(newClass);
+                    //add the new class to the collection
+                    classes.Add(newClass);
 
-                        isCollectionDirty = true;
+                    lock (dirtyLock) isCollectionDirty = true;
 
-                        return newClass;
-                    }
+                    return newClass;
                 });
         }
 
-        public async Task RemoveClass(IClassDefinition cls)
+        public async Task RemoveClass(Guid classId)
         {
             await Task.Run(
                 () =>
                 {
-                    lock (classesLock)
+                    var cls = classes.FirstOrDefault(c => c.Id == classId);
+                    if (cls != null)
                     {
                         classes.Remove(cls);
                         removedClassList.Add(cls);
-                        isCollectionDirty = true;
+                        lock (dirtyLock) isCollectionDirty = true;
                     }
                 });
         }
@@ -110,44 +102,40 @@ namespace Oss.BuisinessLayer.Services
                 throw new Exception("There are unsaved changes.  Please save or cancel changes.");
             }
 
-            var classesQuery =
-                        from cls in await repo.GetClasses()
-                        select cls.Map();
+            var classesQuery = await GetMappedClassesFromRepo();
+            classes.ReLoad(classesQuery);
 
-            lock (classesLock)
             lock (dirtyLock)
             {
-                classes = new List<IClassDefinition>(classesQuery);
                 isCollectionDirty = false;
             }
+        }
+
+        private async Task<IEnumerable<IClassViewDto>> GetMappedClassesFromRepo()
+        {
+            return
+                from cls in await repo.GetClasses()
+                select mapper.MapToViewDto(cls);
         }
 
         public async Task SaveChanges()
         {
             if (IsDirty)
             {
-                lock (classesLock)
+                var dirtyClasses = new List<IClassViewDto>();
+
+                foreach (var cls in classes.Where(c => c.IsDirty))
                 {
-                    foreach(var cls in classes)
-                    {
-                        if (cls.IsDirty)
-                        {
-                            repo.Save();
-                        }
-                    }
+                    dirtyClasses.Add(cls);
                 }
-                
+
+                await repo.Save(dirtyClasses.Select(c => mapper.MapToDalDto(c)));
             }
         }
 
-        public Task UpdateClass(IClassDefinition cls)
+        public Task UpdateClass(IClassViewDto cls)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveClass(Guid classId)
-        {
-            throw new NotImplementedException();
+           throw new NotImplementedException();
         }
 
         public Task<IEnumerable<IPropertyDefinition>> GetProperties(Guid classId)
@@ -168,6 +156,16 @@ namespace Oss.BuisinessLayer.Services
         public Task RemoveProperty(Guid classId, Guid propertyId)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<IType>> GetTypes()
+        {
+            return Task.Run(() => PropertyType.Types);
+        }
+
+        public Task<IType> GetType(Guid id)
+        {
+            return Task.Run(() => PropertyType.Types.FirstOrDefault(t => t.Id == id));
         }
     }
 }

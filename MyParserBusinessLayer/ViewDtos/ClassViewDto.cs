@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace Oss.BuisinessLayer.ViewDtos
 {
-    public class DynamicClassDefinition : IClassDefinition
+    public class ClassViewDto : IClassViewDto
     {
-        private Guid id = Guid.NewGuid();
-
         private List<IPropertyDefinition> properties = new List<IPropertyDefinition>();
 
         public Guid Id { get; }
@@ -27,6 +25,7 @@ namespace Oss.BuisinessLayer.ViewDtos
         public string Name { get; set; }
         public IEnumerable<IPropertyDefinition> Properties { get { return properties.AsEnumerable(); } }
 
-        
+        public ClassViewDto() : this(Guid.NewGuid()) { }
+        public ClassViewDto(Guid id) { Id = id; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Oss.Dal.Dtos
 {
-    class PropertyDefinitionDto : IPropertyDefinition
+    class PropertyDalDto : IPropertyDalDto
     {
         public long Id { get; set; }
         public bool IsReadOnly { get; set; }

@@ -12,6 +12,7 @@ namespace Oss.Dal.Models
         public string Name { get; set; }
         public virtual List<PropertyDefinition> Properties { get; private set; } = new List<PropertyDefinition>();
 
+        public ClassDefinition() { }
         public ClassDefinition(long id) { ClassDefinitionId = id; }
     }
 }

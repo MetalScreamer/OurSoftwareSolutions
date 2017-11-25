@@ -6,14 +6,14 @@ namespace Oss.Dal.Repositories
 {
     public interface IDynamicClassRepository
     {
-        Task<IEnumerable<IClassDefinition>> GetClasses(bool includeProperties = false);
-        Task<IClassDefinition> Get(long id, bool includeProperties = false);
-        Task<IEnumerable<IClassDefinition>> Find(string nameIsLike, bool includeProperties = false);
+        Task<IEnumerable<IClassDalDto>> GetClasses(bool includeProperties = false);
+        Task<IClassDalDto> Get(long id, bool includeProperties = false);
+        Task<IEnumerable<IClassDalDto>> Find(string nameIsLike, bool includeProperties = false);
 
-        Task<IEnumerable<IPropertyDefinition>> GetProperties(IClassDefinition classDto);
-        Task<IPropertyDefinition> GetProperty(long id);
+        Task<IEnumerable<IPropertyDalDto>> GetProperties(IClassDalDto classDto);
+        Task<IPropertyDalDto> GetProperty(long id);
         
-        Task Save(IEnumerable<IClassDefinition> classDtos = null, IEnumerable<IPropertyDefinition> propertyDtos = null);
-        Task Delete(IEnumerable<IClassDefinition> classDtos = null, IEnumerable<IPropertyDefinition> propertyDtos = null);
+        Task Save(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null);
+        Task Delete(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null);
     }
 }

@@ -10,7 +10,7 @@ namespace Oss.Windows.ViewModels
     {
         private ClassDefinitionViewModel selectedClass;
         private PropertyDefinitionViewModel selectedProperty;
-        private IDynamicClassService classLibraryService;
+        private IClassService classLibraryService;
 
         public ObservableCollection<ClassDefinitionViewModel> Classes { get; } = new ObservableCollection<ClassDefinitionViewModel>();
         public ClassDefinitionViewModel SelectedClass
@@ -32,17 +32,17 @@ namespace Oss.Windows.ViewModels
         }
 
         public AsynchronousCommand AddClass { get; }
-        public Command RemoveClass { get; }
+        public AsynchronousCommand RemoveClass { get; }
         public AsynchronousCommand AddProperty { get; }
-        public Command RemoveProperty { get; }
+        public AsynchronousCommand RemoveProperty { get; }
 
-        public ClassLibraryViewModel(IDynamicClassService classLibraryService)
+        public ClassLibraryViewModel(IClassService classLibraryService)
         {
             this.classLibraryService = classLibraryService;
             AddClass = new AsynchronousCommand(DoAddClassAsync);
-            RemoveClass = new Command(p => DoRemoveClass(), p => CanRemoveClass());
+            RemoveClass = new AsynchronousCommand(DoRemoveClass, CanRemoveClass);
             AddProperty = new AsynchronousCommand(DoAddProperty, CanAddProperty);
-            RemoveProperty = new Command(p => DoRemoveProperty(), p => CanRemoveProperty());
+            RemoveProperty = new AsynchronousCommand(DoRemoveProperty, CanRemoveProperty);
         }
 
         private bool CanRemoveProperty()
@@ -50,19 +50,19 @@ namespace Oss.Windows.ViewModels
             return SelectedProperty != null;
         }
 
-        private void DoRemoveProperty()
+        private async Task DoRemoveProperty()
         {
-            classLibraryService.RemoveProperty(SelectedClass.Id, SelectedProperty.Id);
+            await classLibraryService.RemoveProperty(SelectedClass.Id, SelectedProperty.Id);
         }
 
         private bool CanAddProperty()
         {
-            throw new NotImplementedException();
+            return SelectedClass != null;
         }
 
         private async Task DoAddProperty()
         {
-            throw new NotImplementedException();
+            var property = await classLibraryService.AddProperty(SelectedClass.Id);
         }
 
         private bool CanRemoveClass()
@@ -70,23 +70,16 @@ namespace Oss.Windows.ViewModels
             return SelectedClass != null;
         }
 
-        private void DoRemoveClass()
+        private async Task DoRemoveClass()
         {
-            //if()
-            Classes.Remove(SelectedClass);
+            var selectedClass = SelectedClass;
+            Classes.Remove(selectedClass);
+            await classLibraryService.RemoveClass(selectedClass.Id);            
         }
 
         private async Task DoAddClassAsync()
-        {
-            var classDef = new ClassDefinitionViewModel();
-
-            await Task.Run(
-                () =>
-                {
-                    var counter = 0;
-                    while (Classes.Select(c => c.Name).Contains($"New Class {++counter}", StringComparer.OrdinalIgnoreCase)) ;
-                    classDef.Name = $"New Class {counter}";
-                });
+        {            
+            var classDef = new ClassDefinitionViewModel(await classLibraryService.AddClass());            
 
             Classes.Add(classDef);
             SelectedClass = classDef;

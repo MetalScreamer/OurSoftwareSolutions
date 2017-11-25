@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Oss.Dal.Dtos
 {
-    public interface IPropertyDefinition
+    public interface IPropertyDalDto
     {
         long Id { get; }
         string Name { get; set; }

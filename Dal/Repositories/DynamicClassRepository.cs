@@ -5,6 +5,7 @@ using Oss.Dal.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace Oss.Dal.Repositories
 {
     public class DynamicClassRepository : IDynamicClassRepository
     {
-        public Task<IEnumerable<IClassDefinition>> Find(string nameIsLike, bool includeProperties)
+        public Task<IEnumerable<IClassDalDto>> Find(string nameIsLike, bool includeProperties)
         {
             return Task.Run(
                 () =>
@@ -29,22 +30,23 @@ namespace Oss.Dal.Repositories
 
         }
 
-        public Task<IEnumerable<IClassDefinition>> GetClasses(bool includeProperties)
+        public async Task<IEnumerable<IClassDalDto>> GetClasses(bool includeProperties)
         {
-            return Task.Run(
+            var classModels = await Task.Run(
                 () =>
                 {
                     using (var db = new OssDbContext())
                     {
                         return db.Classes
                             .IncludePropertiesIfNeeded(includeProperties)
-                            .Select(c => c.MapClassToDto(includeProperties))
-                            .AsEnumerable();
+                            .ToList();
                     }
                 });
+
+            return classModels.Select(c => c.MapClassToDto(includeProperties));
         }
 
-        public Task<IClassDefinition> Get(long id, bool includeProperties)
+        public Task<IClassDalDto> Get(long id, bool includeProperties)
         {
             using (var db = new OssDbContext())
             {
@@ -56,7 +58,7 @@ namespace Oss.Dal.Repositories
             }
         }
 
-        public Task<IEnumerable<IPropertyDefinition>> GetProperties(IClassDefinition classDto)
+        public Task<IEnumerable<IPropertyDalDto>> GetProperties(IClassDalDto classDto)
         {
             return Task.Run(
                 () =>
@@ -72,7 +74,7 @@ namespace Oss.Dal.Repositories
                 });
         }
 
-        public Task<IPropertyDefinition> GetProperty(long id)
+        public Task<IPropertyDalDto> GetProperty(long id)
         {
             return Task.Run(
                 () =>
@@ -90,7 +92,7 @@ namespace Oss.Dal.Repositories
                 });
         }
 
-        public Task Save(IEnumerable<IClassDefinition> classDtos, IEnumerable<IPropertyDefinition> propertyDtos)
+        public Task Save(IEnumerable<IClassDalDto> classDtos, IEnumerable<IPropertyDalDto> propertyDtos)
         {
             return Task.Run(
                 () =>
@@ -103,10 +105,10 @@ namespace Oss.Dal.Repositories
                         db.SaveChangesAsync();
                     }
                 });
-           
+
         }
 
-        public Task Delete(IEnumerable<IClassDefinition> classDtos = null, IEnumerable<IPropertyDefinition> propertyDtos = null)
+        public Task Delete(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null)
         {
             return Task.Run(
                 () =>

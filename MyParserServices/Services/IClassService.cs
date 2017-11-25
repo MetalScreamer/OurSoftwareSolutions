@@ -7,17 +7,20 @@ using System.Threading.Tasks;
 
 namespace Oss.Common.Services
 {
-    public interface IDynamicClassService
+    public interface IClassService
     {
-        Task<IEnumerable<IClassDefinition>> GetClasses();
-        Task<IClassDefinition> AddClass();
-        Task UpdateClass(IClassDefinition cls);
+        Task<IEnumerable<IClassViewDto>> GetClasses();
+        Task<IClassViewDto> AddClass();
+        Task UpdateClass(IClassViewDto cls);
         Task RemoveClass(Guid classId);
 
         Task<IEnumerable<IPropertyDefinition>> GetProperties(Guid classId);
         Task<IPropertyDefinition> AddProperty(Guid classId);
         Task UpdateProperty(IPropertyDefinition property);
         Task RemoveProperty(Guid classId, Guid propertyId);
+
+        Task<IEnumerable<IType>> GetTypes();
+        Task<IType> GetType(Guid id);
 
         bool IsDirty { get; }
 

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Oss.Dal.Dtos
 {
-    class ClassDefinitionDto : IClassDefinition
+    public class ClassDalDto : IClassDalDto
     {
-        public long Id { get; set; }
+        public long Id { get; }
         public string Name { get; set; }
-        public IEnumerable<IPropertyDefinition> Properties { get; set; }
+        public IEnumerable<IPropertyDalDto> Properties { get; set; }
+
+        public ClassDalDto(long id) { Id = id; }
     }
 }

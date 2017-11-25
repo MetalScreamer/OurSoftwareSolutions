@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oss.Dal.Dtos
+namespace Oss.Common.ViewDtos
 {
-    public interface IClassDefinition
+    public interface IClassViewDto
     {
-        long Id { get; }
+        Guid Id { get; }
         string Name { get; set; }
-        IEnumerable<IPropertyDefinition> Properties { get; }
+        
+        bool IsDirty { get; }
     }
 }

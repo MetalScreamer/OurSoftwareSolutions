@@ -50,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\OssDbContext.cs" />
-    <Compile Include="Dtos\ClassDefinitionDto.cs" />
-    <Compile Include="Dtos\PropertyDefinitionDto.cs" />
+    <Compile Include="Dtos\ClassDalDto.cs" />
+    <Compile Include="Dtos\PropertyDalDto.cs" />
     <Compile Include="Models\ClassDefinition.cs" />
     <Compile Include="Models\PropertyDefinition.cs" />
     <Compile Include="Repositories\DynamicClassRepository.cs" />

@@ -34,7 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extentions\DynamicClassExtensions.cs" />
+    <Compile Include="Mappers\ClassDefinitionMapper.cs" />
+    <Compile Include="Mappers\IClassDefinitionMapper.cs" />
     <Compile Include="Models\DynamicClass.cs" />
     <Compile Include="Models\DynamicClassPropertyDefinition.cs" />
     <Compile Include="ExpressionParsingException.cs" />
@@ -44,13 +45,11 @@
     <Compile Include="Services\DynamicClassService.cs" />
     <Compile Include="SyntaxHelpers\DataTypeSyntax.cs" />
     <Compile Include="Token.cs" />
-    <Compile Include="ViewDtos\DynamicClassDefinition.cs" />
+    <Compile Include="ViewDtos\ClassViewDto.cs" />
     <Compile Include="ViewDtos\DynamicClassPropertyDefinition.cs" />
-    <Compile Include="ViewDtos\DynamicClassPropertyType.cs" />
+    <Compile Include="ViewDtos\PropertyType.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mappers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DataServiceInterfaces\DataServiceInterfaces.csproj">
       <Project>{67f1e5ca-baa8-45dd-aa0c-58c8f9b3e80e}</Project>
