@@ -41,6 +41,7 @@
     <Compile Include="Extensions\DictionaryExtentions.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Interfaces\IMapper.cs" />
     <Compile Include="ViewDtos\FactoryDelegates.cs" />
     <Compile Include="ViewModels\IClassDefinitionViewModel.cs" />
     <Compile Include="Interfaces\IExpressionService.cs" />

@@ -27,15 +27,6 @@ namespace Oss.BuisinessLayer.Services
             this.mapper = mapper;
         }
 
-        //Do I need/want this?
-        //public IEnumerable<IClassDefinition> Classes
-        //{
-        //    get
-        //    {
-        //       return GetClasses().Result;                
-        //    }
-        //}
-
         public bool IsDirty
         {
             get
@@ -115,7 +106,7 @@ namespace Oss.BuisinessLayer.Services
         {
             return
                 from cls in await repo.GetClasses()
-                select mapper.MapToViewDto(cls);
+                select mapper.MapToViewDto(cls, Guid.Empty);
         }
 
         public async Task SaveChanges()
@@ -129,7 +120,7 @@ namespace Oss.BuisinessLayer.Services
                     dirtyClasses.Add(cls);
                 }
 
-                await repo.Save(dirtyClasses.Select(c => mapper.MapToDalDto(c)));
+                //await repo.Save(dirtyClasses.Select(c => mapper.MapToDalDto(c)));
             }
         }
 

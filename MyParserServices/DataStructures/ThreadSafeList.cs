@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Oss.Common.DataStructures
 {
-    public class ThreadSafeList<T> : IList<T>
+    public class ThreadSafeList<T> : IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private object _lock = new object();
         private List<T> internalList = new List<T>();
@@ -23,10 +25,27 @@ namespace Oss.Common.DataStructures
             }
             set
             {
+                bool changed = false;
+                T oldVal = default(T);
                 lock (_lock)
                 {
-                    internalList[index] = value;
+                    if (!EqualityComparer<T>.Default.Equals(internalList[index], value))
+                    {
+                        oldVal = internalList[index];
+                        internalList[index] = value;
+                        changed = true;
+                    }                                       
                 }
+
+                if (changed)
+                {
+                    CollectionChanged?.Invoke(
+                        this, 
+                        new NotifyCollectionChangedEventArgs(
+                                NotifyCollectionChangedAction.Replace, 
+                                value, 
+                                oldVal));
+                }                
             }
         }
 
@@ -43,12 +62,21 @@ namespace Oss.Common.DataStructures
 
         public bool IsReadOnly => false;
 
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public void Add(T item)
         {
             lock (_lock)
             {
                 internalList.Add(item);
             }
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add, 
+                    item));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public void Clear()
@@ -57,6 +85,10 @@ namespace Oss.Common.DataStructures
             {
                 internalList.Clear();
             }
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public bool Contains(T item)
@@ -98,6 +130,10 @@ namespace Oss.Common.DataStructures
             {
                 internalList.Insert(index, item);
             }
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public void ReLoad(IEnumerable<T> items)
@@ -107,22 +143,45 @@ namespace Oss.Common.DataStructures
                 internalList.Clear();
                 internalList.AddRange(items);
             }
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public bool Remove(T item)
         {
+            bool result;
             lock (_lock)
             {
-                return internalList.Remove(item);
+                result = internalList.Remove(item);
             }
+
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
+
+            return result;
         }
 
         public void RemoveAt(int index)
         {
+            T removedItem;
             lock (_lock)
             {
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                }
+                removedItem = internalList[index];
                 internalList.RemoveAt(index);
             }
+
+            CollectionChanged?.Invoke(
+                this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
 
         IEnumerator IEnumerable.GetEnumerator()

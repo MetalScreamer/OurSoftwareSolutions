@@ -1,4 +1,6 @@
-﻿namespace Oss.Common.ViewDtos
+﻿using System;
+
+namespace Oss.Common.ViewDtos
 {
-    public delegate IClassViewDto ClassViewDtoFactory(long id);
+    public delegate IClassViewDto ClassViewDtoFactory(Guid id);
 }

@@ -12,6 +12,10 @@ using Oss.Common.ViewDtos;
 using Oss.BuisinessLayer.ViewDtos;
 using Unity.Resolution;
 using Oss.Dal.Dtos;
+using Oss.BuisinessLayer.Mappers;
+using Oss.Dal.Utilities;
+using Unity.Lifetime;
+using Oss.Dal.Models;
 
 namespace Oss.Windows
 {
@@ -48,6 +52,10 @@ namespace Oss.Windows
         private static void SetupIocContainer(IUnityContainer container)
         {
             container
+                .RegisterType<ModelDtoMapper>(new ContainerControlledLifetimeManager())
+                .RegisterInstance<IMapper<IClassDalDto, ClassDefinition>>(container.Resolve<ModelDtoMapper>())
+                .RegisterInstance<IMapper<IPropertyDalDto, PropertyDefinition>>(container.Resolve<ModelDtoMapper>())
+                .RegisterType<IClassDefinitionMapper, ClassDefinitionMapper>()
                 .RegisterType<IDynamicClassRepository, DynamicClassRepository>()
                 .RegisterType<IClassService, DynamicClassService>()
                 .RegisterType<ClassLibraryViewModel>()
@@ -55,7 +63,7 @@ namespace Oss.Windows
                 .RegisterType<IClassViewDto, ClassViewDto>()
                 .RegisterInstance<ClassViewDtoFactory>(id => container.Resolve<IClassViewDto>(new ParameterOverride("id", id)))
                 .RegisterType<IClassDalDto, ClassDalDto>()
-                .RegisterInstance<ClassDalDtoFactory>(id=>container.Resolve<IClassDalDto>(new ParameterOverride("id", id)))
+                .RegisterInstance<ClassDalDtoFactory>(id => container.Resolve<IClassDalDto>(new ParameterOverride("id", id)))
                 .RegisterType<MainWindowViewModel>()
                 .RegisterType<MainWindow>(new InjectionConstructor(container.Resolve<MainWindowViewModel>()));
         }

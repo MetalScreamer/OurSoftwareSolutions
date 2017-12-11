@@ -13,7 +13,7 @@ namespace Oss.Dal.Repositories
         Task<IEnumerable<IPropertyDalDto>> GetProperties(IClassDalDto classDto);
         Task<IPropertyDalDto> GetProperty(long id);
         
-        Task Save(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null);
+        Task<ISaveResult> Save(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null);
         Task Delete(IEnumerable<IClassDalDto> classDtos = null, IEnumerable<IPropertyDalDto> propertyDtos = null);
     }
 }

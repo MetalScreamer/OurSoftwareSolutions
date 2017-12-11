@@ -1,4 +1,5 @@
-﻿using Oss.Dal.Database;
+﻿using Oss.Common.Interfaces;
+using Oss.Dal.Database;
 using Oss.Dal.Dtos;
 using Oss.Dal.Models;
 using Oss.Dal.Utilities;
@@ -13,6 +14,17 @@ namespace Oss.Dal.Repositories
 {
     public class DynamicClassRepository : IDynamicClassRepository
     {
+        private readonly IMapper<IClassDalDto, ClassDefinition> classMapper;
+        private readonly IMapper<IPropertyDalDto, PropertyDefinition> propertyMapper;
+
+        public DynamicClassRepository(
+            IMapper<IClassDalDto, ClassDefinition> classMapper,
+            IMapper<IPropertyDalDto, PropertyDefinition> propertyMapper)
+        {
+            this.classMapper = classMapper;
+            this.propertyMapper = propertyMapper;
+        }
+
         public Task<IEnumerable<IClassDalDto>> Find(string nameIsLike, bool includeProperties)
         {
             return Task.Run(
@@ -23,11 +35,10 @@ namespace Oss.Dal.Repositories
                         return db.Classes
                             .IncludePropertiesIfNeeded(includeProperties)
                             .Where(c => c.Name.Contains(nameIsLike))
-                            .Select(c => c.MapClassToDto(includeProperties))
+                            .Select(c => classMapper.Map(c))
                             .AsEnumerable();
                     }
                 });
-
         }
 
         public async Task<IEnumerable<IClassDalDto>> GetClasses(bool includeProperties)
@@ -43,7 +54,7 @@ namespace Oss.Dal.Repositories
                     }
                 });
 
-            return classModels.Select(c => c.MapClassToDto(includeProperties));
+            return classModels.Select(c => classMapper.Map(c));
         }
 
         public Task<IClassDalDto> Get(long id, bool includeProperties)
@@ -52,9 +63,9 @@ namespace Oss.Dal.Repositories
             {
                 return
                     db.Classes
-                    .IncludePropertiesIfNeeded(includeProperties)
-                    .FirstOrDefaultAsync(c => c.ClassDefinitionId == id)
-                    .ContinueWith(t => t.Result.MapClassToDto(includeProperties));
+                        .IncludePropertiesIfNeeded(includeProperties)
+                        .FirstOrDefaultAsync(c => c.ClassDefinitionId == id)
+                        .ContinueWith(t => classMapper.Map(t.Result));
             }
         }
 
@@ -68,7 +79,7 @@ namespace Oss.Dal.Repositories
                         return
                             db.Properties
                             .Where(p => p.OwningClassId == classDto.Id)
-                            .Select(p => p.MapPropertyToDto())
+                            .Select(p => propertyMapper.Map(p))
                             .AsEnumerable();
                     }
                 });
@@ -85,14 +96,14 @@ namespace Oss.Dal.Repositories
                             (
                                 from p in db.Properties
                                 where p.PropertyDefinitionId == id
-                                select p.MapPropertyToDto()
+                                select propertyMapper.Map(p)
                             ).SingleOrDefault();
                     }
 
                 });
         }
 
-        public Task Save(IEnumerable<IClassDalDto> classDtos, IEnumerable<IPropertyDalDto> propertyDtos)
+        public Task<ISaveResult> Save(IEnumerable<IClassDalDto> classDtos, IEnumerable<IPropertyDalDto> propertyDtos)
         {
             return Task.Run(
                 () =>
@@ -103,6 +114,8 @@ namespace Oss.Dal.Repositories
                         //var entry = db.Entry(cls);
                         //entry.State = EntityState.Modified;
                         db.SaveChangesAsync();
+
+                        return (ISaveResult)new SaveResult(null, null);
                     }
                 });
 
@@ -141,7 +154,6 @@ namespace Oss.Dal.Repositories
                             db.SaveChangesAsync();
                         }
                     }
-                });
-        }
+                });        }
     }
 }

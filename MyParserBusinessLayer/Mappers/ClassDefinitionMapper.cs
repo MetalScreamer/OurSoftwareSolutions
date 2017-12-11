@@ -6,18 +6,18 @@ namespace Oss.BuisinessLayer.Mappers
 {
     public class ClassDefinitionMapper : IClassDefinitionMapper
     {
-        private Func<IClassDalDto> classDalDtoFactory;
-        private Func<IClassViewDto> classViewDtoFactory;
+        private ClassDalDtoFactory classDalDtoFactory;
+        private ClassViewDtoFactory classViewDtoFactory;
 
-        public ClassDefinitionMapper(Func<IClassDalDto> classDalDtoFactory, Func<IClassViewDto> classViewDtoFactory)
+        public ClassDefinitionMapper(ClassDalDtoFactory classDalDtoFactory, ClassViewDtoFactory classViewDtoFactory)
         {
             this.classDalDtoFactory = classDalDtoFactory;
             this.classViewDtoFactory = classViewDtoFactory;
         }
 
-        public IClassDalDto MapToDalDto(IClassViewDto classDefinition)
+        public IClassDalDto MapToDalDto(IClassViewDto classDefinition, long id)
         {
-            var result = classDalDtoFactory();
+            var result = classDalDtoFactory(id);
 
             result.Name = classDefinition.Name;
             
@@ -25,9 +25,10 @@ namespace Oss.BuisinessLayer.Mappers
             return result;
         }
 
-        public IClassViewDto MapToViewDto(IClassDalDto classDefinition)
+        public IClassViewDto MapToViewDto(IClassDalDto classDefinition, Guid id)
         {
-            var result = classViewDtoFactory();
+            var result = classViewDtoFactory(id);
+            result.Name = classDefinition.Name;
 
             return result;
         }      
